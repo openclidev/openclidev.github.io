@@ -1,0 +1,97 @@
+# OpenCLI Specification
+
+Define your Command Line Interface (CLI) in a declarative, language-agnostic document that can be used to generate documentation and boilerplate code.
+
+_Like OpenAPI Spec, but for your CLIs_
+
+## Overview
+
+OpenCLI specification is a document specification that can be used to describe CLIs. Spec-compliant documents are meant to be human-readable and enable tooling automation.
+
+## Benefits
+
+- Promote contract first development
+- Decouple implementation of commands from the CLI Framework
+- Automatically generate documentation your CLI
+- Automatically generate CLI framework-specific code
+- Improve LLM and agent understanding of your CLI
+
+## Examples
+
+### Pleasantries CLI
+
+Let's describe the following CLI
+
+```sh
+$ pleasantries greet John --language=english
+# hello John
+$ pleasantries farewell Jane --language=spanish
+# adios Jane
+```
+
+The CLI above can be described using an OpenCLI Specification Document in YAML (or JSON):
+
+```yaml
+# cli.yaml
+
+opencliVersion: 1.0.0-alpha.8
+
+info:
+  title: Pleasantries
+  summary: A fun CLI to greet or bid farewell
+  version: 1.0.0
+  binary: pleasantries
+
+commands:
+  pleasantries {command} <name> [flags]:
+    group: true
+
+  pleasantries greet <name> [flags]:
+    summary: "Say hello"
+    args:
+      - name: "name"
+        summary: "A name to include the greeting"
+        required: true
+        type: "string"
+    flags:
+      - name: "language"
+        summary: "The language of the greeting"
+        type: "string"
+        choices:
+          - value: "english"
+          - value: "spanish"
+        default: "english"
+
+  pleasantries farewell <name> [flags]:
+    summary: "Say goodbye"
+    args:
+      - name: "name"
+        summary: "A name to include in the farewell"
+        required: true
+        type: "string"
+    flags:
+      - name: "language"
+        summary: "The language of the greeting"
+        type: "string"
+        choices:
+          - value: "english"
+          - value: "spanish"
+        default: "english"
+```
+
+## The Spec
+
+The full spec is described by JSON Schema - https://github.com/bcdxn/opencli/tree/main/spec.schema.json
+
+## Inspiration
+
+- [OpenAPI Specification](https://swagger.io/specification/)
+- Code generation tools like:
+  - [oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)
+  - [ogen](https://ogen.dev)
+- Stripe's [amazing looking CLI documentation](https://docs.stripe.com/cli)
+- All of the incredible CLI Frameworks
+  - [Cobra](https://cobra.dev)
+  - [Urfave CLI](https://cli.urfave.org)
+  - [Yargs](https://yargs.js.org)
+  - [Commander.JS](https://github.com/tj/commander.js/)
